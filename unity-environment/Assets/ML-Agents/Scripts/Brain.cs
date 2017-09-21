@@ -96,6 +96,10 @@ public class Brain : MonoBehaviour
     public Dictionary<int, Agent> agents = new Dictionary<int, Agent>();
     /**<  \brief Keeps track of the agents which subscribe to this brain*/
 
+    public bool collectData;
+    /**< \brief If checked, the brain will collect data */  
+    private DataSaver saver;
+
     [SerializeField]
     ScriptableObject[] CoreBrains;
 
@@ -167,7 +171,11 @@ public class Brain : MonoBehaviour
     {
         UpdateCoreBrains();
         coreBrain.InitializeCoreBrain();
-
+        if (collectData)
+        {
+            saver = new DataSaver(this);
+            saver.SaveBrain();
+        }
     }
 
     /// Collects the states of all the agents which subscribe to this brain 
@@ -300,12 +308,20 @@ public class Brain : MonoBehaviour
     public void SendState()
     {
         coreBrain.SendState();
+        if (collectData)
+        {
+            saver.SaveState();
+        }
     }
 
     /// Uses coreBrain to call decideAction on the CoreBrain
     public void DecideAction()
     {
         coreBrain.DecideAction();
+        if (collectData)
+        {
+            saver.SaveAction();
+        }
     }
 
     /// \brief Is used by the Academy to send a step message to all the agents 
@@ -350,6 +366,10 @@ public class Brain : MonoBehaviour
         {
             agent.Reset();
             agent.done = false;
+        }
+        if (collectData)
+        {
+            saver.SaveReset();
         }
     }
 

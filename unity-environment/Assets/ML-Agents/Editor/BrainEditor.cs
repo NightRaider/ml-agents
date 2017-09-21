@@ -38,6 +38,8 @@ public class BrainEditor : Editor
 
 		myBrain.brainType = (BrainType)EditorGUILayout.EnumPopup ("Type Of Brain ", myBrain.brainType);
 
+		myBrain.collectData = EditorGUILayout.Toggle("Collect Data", myBrain.collectData);
+
 		if ((int)myBrain.brainType >= System.Enum.GetValues (typeof(BrainType)).Length) {
 			myBrain.brainType = BrainType.Player;
 		}
